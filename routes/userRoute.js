@@ -2,6 +2,7 @@ let express = require("express");
 let router = express.Router();
 const pool = require("../DB/pool");
 
+//사용자 조회
 router.get("/getUserList", async (req, res, next) => {
   let {
     serviceKey = "111111111", // 서비스 인증키
@@ -57,4 +58,38 @@ router.get("/getUserList", async (req, res, next) => {
   }
 });
 
+//사용자 정보 변경(관리자 권한으로 사용자 NickName 변경)
+router.post("/postUserNickName", async (req, res, next) => {
+  console.log(req.body); // 요청 본문 출력
+
+  let { serviceKey = "", userIdx = "", userNickName = "" } = req.body;
+
+  console.log(serviceKey, userIdx, userNickName);
+
+  try {
+    let myKey = serviceKey;
+    console.log(myKey);
+    // Nickname이 NULL일 경우
+    if (userNickName == "") {
+      return res.json({
+        resultCode: "01",
+        resultMsg: "Parameter Error or NULL",
+      });
+    }
+
+    const sql = `UPDATE t_user SET user_nick_name = '${userNickName}'`;
+    console.log("sql: " + sql);
+    const data = await pool.query(sql);
+    console.log("data[0]: " + data[0]);
+
+    let jsonResult = {
+      resultCode: "00",
+      resultMsg: "NORMAL_SERVICE",
+    };
+
+    return res.json(jsonResult);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
 module.exports = router;
