@@ -11,10 +11,19 @@ router.get("/getUserList", async (req, res, next) => {
     dongCode = "101", //        동코드
     hoCode = "101", //          호코드
     doubleDataFlag = "Y", //     2배수 데이터 사용여부
-    userType = "ALL", //        유저타입: ALL: 모든 유저, 0: 클라우드 유저, 1: 로컬유저
+    userType = "1", //        유저타입: ALL: 모든 유저, 0: 클라우드 유저, 1: 로컬유저
   } = req.query;
 
-  console.log(serviceKey, numOfRows, pageNo, dongCode, hoCode, doubleDataFlag);
+  console.log(
+    serviceKey,
+    numOfRows,
+    pageNo,
+    dongCode,
+    hoCode,
+    doubleDataFlag,
+    userType
+  );
+  console.log(req.query); // 요청 본문 출력
 
   try {
     //ALL인 경우만 %으로 검색 그 외 경우는 받은값 그대로 검색
@@ -60,15 +69,11 @@ router.get("/getUserList", async (req, res, next) => {
 
 //사용자 정보 변경(관리자 권한으로 사용자 NickName 변경)
 router.post("/postUserNickName", async (req, res, next) => {
-  console.log(req.body); // 요청 본문 출력
-
   let { serviceKey = "", userIdx = "", userNickName = "" } = req.body;
 
   console.log(serviceKey, userIdx, userNickName);
 
   try {
-    let myKey = serviceKey;
-    console.log(myKey);
     // Nickname이 NULL일 경우
     if (userNickName == "") {
       return res.json({
@@ -77,7 +82,8 @@ router.post("/postUserNickName", async (req, res, next) => {
       });
     }
 
-    const sql = `UPDATE t_user SET user_nick_name = '${userNickName}'`;
+    const sql = `UPDATE t_user SET user_nick_name = '${userNickName}'
+                 WHERE user_idx = ${userIdx}`;
     console.log("sql: " + sql);
     const data = await pool.query(sql);
     console.log("data[0]: " + data[0]);

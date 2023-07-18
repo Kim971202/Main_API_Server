@@ -6,7 +6,7 @@ const pool = mysql.createPool({
   user: "ento",
   password: "gnHo0vjkgVXCiJr",
   database: "hnintegratedserver",
-  connectionLimit: 500,
+  connectionLimit: 50,
 });
 
 module.exports = pool;
