@@ -21,7 +21,9 @@ socket.onopen = function (event) {
 
   // Listen for messages
   socket.onmessage = function (event) {
-    console.log("Client received a message: ", event.data);
+    //console.log("Client received a message: ", event.data);
+    let myData = JSON.parse(event.data);
+    console.log(myData.header.sourceID); // 0000010105010001
   };
 
   // Listen for socket closes
