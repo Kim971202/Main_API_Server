@@ -1,6 +1,16 @@
 let express = require("express");
 let router = express.Router();
 const pool = require("../DB/pool");
+const jwt = require("../utils/token");
+
+//Token Test
+router.get("/token", async (req, res) => {
+  const user = "myUser@email.com";
+
+  const jwtToken = await jwt.sign(user);
+
+  return res.status(200).send(jwtToken.token);
+});
 
 //사용자 조회
 router.get("/getUserList", async (req, res, next) => {
